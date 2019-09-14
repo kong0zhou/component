@@ -187,42 +187,47 @@ func (d *Dispatcher) dispatch() (err error) {
 	for {
 		select {
 		case job := <-d.jobQueue:
-			go func(job Job) {
-				jobChannel := <-d.workerPool
-				jobChannel <- job
-			}(job)
+			// 这里是串行
+			jobChannel := <-d.workerPool
+			jobChannel <- job
 		}
 	}
 }
 
-func (d *Dispatcher) InQueue(job Job) (err error) {
+// ok是否入队成功
+func (d *Dispatcher) InQueue(job Job) (ok bool, err error) {
 	if d.workerPool == nil {
 		err = fmt.Errorf(`workerPool is nil`)
 		logs.Error(err)
-		return err
+		return false, err
 	}
 	if d.jobQueue == nil {
 		err = fmt.Errorf(`jobQueue is nil`)
 		logs.Error(err)
-		return err
+		return false, err
 	}
 	if d.work == nil {
 		err = fmt.Errorf(`work is nil`)
 		logs.Error(err)
-		return err
+		return false, err
 	}
 	if job.R == nil {
 		err = fmt.Errorf(`job.R is nil`)
 		logs.Error(err)
-		return
+		return false, err
 	}
 	if job.W == nil {
 		err = fmt.Errorf(`job.W is nil`)
 		logs.Error(err)
-		return
+		return false, err
 	}
-	d.jobQueue <- job
-	return nil
+	// d.jobQueue <- job
+	select {
+	case d.jobQueue <- job:
+		return true, nil
+	default:
+		return false, nil
+	}
 }
 
 type Queue struct {
@@ -274,9 +279,13 @@ func (q *Queue) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		logs.Error(err)
 		return
 	}
-	err = q.dispatcher.InQueue(*job)
+	ok, err := q.dispatcher.InQueue(*job)
 	if err != nil {
 		logs.Error(err)
+		return
+	}
+	if !ok {
+		logs.Warn(`服务器繁忙，入队失败`)
 		return
 	}
 	_ = <-job.IsFinished
