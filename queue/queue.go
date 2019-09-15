@@ -136,6 +136,7 @@ func NewDispatcher(maxWorkers int, maxQueueSize int, work http.Handler) (*Dispat
 	}, nil
 }
 
+// 启动调度器
 func (d *Dispatcher) Run() (err error) {
 	if d.workerPool == nil {
 		err = fmt.Errorf(`workerPool is nil`)
@@ -194,7 +195,7 @@ func (d *Dispatcher) dispatch() (err error) {
 	}
 }
 
-// ok是否入队成功
+// 进行入队操作，ok是否入队成功
 func (d *Dispatcher) InQueue(job Job) (ok bool, err error) {
 	if d.workerPool == nil {
 		err = fmt.Errorf(`workerPool is nil`)
@@ -231,41 +232,44 @@ func (d *Dispatcher) InQueue(job Job) (ok bool, err error) {
 }
 
 type Queue struct {
-	// maxWorkers   int
-	// work       http.Handler
 	dispatcher *Dispatcher
 }
 
-func NewQueue(maxWorkers int, maxQueueSize int, work http.Handler) (*Queue, error) {
+// 新建一个处理器，如果新建不成功直接panic
+func NewQueue(maxWorkers int, maxQueueSize int, work http.Handler) *Queue {
 	if maxWorkers <= 0 {
 		err := fmt.Errorf(`maxWorkers cannot be less than 0`)
 		logs.Error(err)
-		return nil, err
+		panic(err)
+		// return nil
 	}
 	if maxQueueSize <= 0 {
 		err := fmt.Errorf(`maxQueueSize cannot be less than 0`)
 		logs.Error(err)
-		return nil, err
+		panic(err)
+		// return nil
 	}
 	if work == nil {
 		err := fmt.Errorf(`work cannot be nil`)
 		logs.Error(err)
-		return nil, err
+		panic(err)
+		// return nil
 	}
 	d, err := NewDispatcher(maxWorkers, maxQueueSize, work)
 	if err != nil {
 		logs.Error(err)
-		return nil, err
+		panic(err)
+		// return nil
 	}
 	err = d.Run()
 	if err != nil {
 		logs.Error(err)
-		return nil, err
+		panic(err)
+		// return nil
 	}
 	return &Queue{
 		dispatcher: d,
-		// work:       work,
-	}, nil
+	}
 }
 
 func (q *Queue) ServeHTTP(w http.ResponseWriter, r *http.Request) {
