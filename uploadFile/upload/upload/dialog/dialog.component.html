@@ -1,0 +1,23 @@
+<div class='main'>
+    Upload Files<br>
+    <div class='right'>
+        <button mat-raised-button color="primary" (click)="addFiles()" [disabled]='uploading || uploadOver'>add
+            Files</button>
+    </div>
+    <div class='inBody'>
+        <div class='parent' *ngFor="let file of files">
+            <div class="fileName">{{file.name}}</div>
+            <mat-progress-bar mode="determinate" *ngIf="perents.has(file.name)" value="perents.get(file.name)"
+                class="progress"></mat-progress-bar>
+        </div>
+
+    </div>
+    <div class='inbottom'>
+        <button mat-raised-button (click)="cancel()"
+            [ngClass]="{disableLook:uploading||uploadOver}">cancel</button>&nbsp;
+        <button mat-raised-button *ngIf="!uploading && !uploadOver" color="primary" (click)="upload()">Upload</button>
+        <button mat-raised-button (click)="cancel()" *ngIf="uploading || uploadOver"
+            [disabled]="!uploadOver">finished</button>
+    </div>
+</div>
+<input type="file" class='disableLook' (change)="onFilesAdded()" #file>

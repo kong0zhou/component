@@ -1,0 +1,89 @@
+.main {
+    /* border: 1px solid rgb(0, 0, 0); */
+    /* top:50px; */
+    position: relative;
+    height: 98%;
+}
+
+.button {
+    float: right;
+}
+
+.right {
+    text-align: right;
+}
+
+.inbottom {
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+}
+
+.inBody {
+    /* border: 1px solid rgb(0, 0, 0); */
+    /* height:50px; */
+    position: absolute;
+    bottom: 37px;
+    top: 56px;
+    left: 0px;
+    right: 0px;
+    background-color: rgb(248, 247, 247);
+    border-radius: 8px;
+}
+
+.inBody {
+    /* max-height: 910px; */
+    overflow: auto;
+    /* border:1px solid rgb(0, 0, 0); */
+}
+
+.inBody::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    background-color: rgb(0, 157, 255);
+}
+
+.inBody::-webkit-scrollbar-track {
+    background: #ffffff;
+    border-radius: 2px;
+}
+
+.inBody::-webkit-scrollbar-thumb {
+    background: rgb(0, 157, 255);
+    border-radius: 2px;
+}
+
+.inBody::-webkit-scrollbar-thumb:hover {
+    background: rgb(0, 157, 255);
+}
+
+.inBody::-webkit-scrollbar-corner {
+    background: rgb(0, 157, 255);
+}
+
+.disableLook {
+    display: none;
+}
+
+.fileList {
+    list-style-type: none;
+}
+
+.parent {
+     /* border:1px solid rgb(0, 0, 0); */
+    display: flex;
+    padding-left:12px;
+    margin-top:10px;
+}
+
+.progress{
+    /* border:1px solid rgb(0, 0, 0); */
+    margin-top:9px;
+    width:40%;
+}
+
+.fileName{
+    /* border:1px solid rgb(0, 0, 0); */
+    overflow:hidden;
+    width:60%;
+}
