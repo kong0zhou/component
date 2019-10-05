@@ -37,7 +37,7 @@ func (t *test) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Access-Control-Allow-Headers", "Content-Type,Authorization") //header的类型
 	logs.Info(`有人访问`)
 	if r.Method != "POST" {
-		err := fmt.Errorf(`the method is should be POST`)
+		err := fmt.Errorf(`the method should be POST`)
 		logs.Error(err)
 		return
 	}
